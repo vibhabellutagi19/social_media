@@ -18,10 +18,13 @@ def get_posts(db: Session = Depends(get_db)):
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schema.Post)
-def create_posts(post: schema.CreatePost, db: Session = Depends(get_db),
-                 user_id: int = Depends(oauth2.get_current_user)):
+def create_posts(
+    post: schema.CreatePost,
+    db: Session = Depends(get_db),
+    current_user = Depends(oauth2.get_current_user),
+):
     # user should be logged in to create the post
-    print(user_id)
+    print(current_user.email)
     new_post = models.Post(**post.model_dump())
 
     db.add(new_post)
@@ -33,7 +36,9 @@ def create_posts(post: schema.CreatePost, db: Session = Depends(get_db),
 # {id} is path parameter
 @router.get("/{id}", response_model=schema.Post)
 def get_post(
-    id: int, db: Session = Depends(get_db)
+    id: int,
+    db: Session = Depends(get_db),
+    current_user = Depends(oauth2.get_current_user),
 ):  # to vaidate the id always be int, provide it as int
     found_post = db.query(models.Post).filter(models.Post.id == id).first()
 
@@ -47,7 +52,11 @@ def get_post(
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int, db: Session = Depends(get_db)):
+def delete_post(
+    id: int,
+    db: Session = Depends(get_db),
+    current_user = Depends(oauth2.get_current_user),
+):
     found_post = db.query(models.Post).filter(models.Post.id == id)
 
     if found_post.first() is None:
@@ -61,7 +70,12 @@ def delete_post(id: int, db: Session = Depends(get_db)):
 
 
 @router.put("/{id}", response_model=schema.Post)
-def update_post(id: int, post: schema.PostBase, db: Session = Depends(get_db)):
+def update_post(
+    id: int,
+    post: schema.PostBase,
+    db: Session = Depends(get_db),
+    current_user = Depends(oauth2.get_current_user),
+):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     post_row = post_query.first()
     if post_row is None:
