@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from fastapi import Depends, HTTPException, Response, status, APIRouter
 
 import oauth2
@@ -17,8 +17,15 @@ def get_posts(
     current_user=Depends(oauth2.get_current_user),
     limit: int = 10,
     skip: int = 0,
+    search: Optional[str] = "",
 ):
-    posts = db.query(models.Post).limit(limit).offset(skip).all()
+    posts = (
+        db.query(models.Post)
+        .filter(models.Post.title.contains(search))
+        .limit(limit)
+        .offset(skip)
+        .all()
+    )
     return posts
 
 
