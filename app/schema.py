@@ -27,7 +27,6 @@ class PostBase(BaseModel):
     title: str
     content: str
     published: bool = True
-    owner: UserResponse
 
 
 class CreatePost(PostBase):
@@ -38,6 +37,7 @@ class Post(PostBase):
     id: int
     created_at: datetime
     owner_id: int
+    owner: UserResponse
 
     class Config:
         from_attributes = True
