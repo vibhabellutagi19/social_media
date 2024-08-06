@@ -6,33 +6,6 @@ from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 
-class PostBase(BaseModel):
-    title: str
-    content: str
-    published: bool = True
-
-
-class CreatePost(PostBase):
-    pass
-
-
-# Response from api to use
-
-
-class Post(PostBase):
-    id: int
-    created_at: datetime
-    owner_id: int
-
-    class Config:
-        from_attributes = True
-
-
-class CreateUser(BaseModel):
-    email: EmailStr
-    password: str
-
-
 class UserResponse(BaseModel):
     id: int
     email: EmailStr
@@ -48,6 +21,31 @@ class UserLogin(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class PostBase(BaseModel):
+    title: str
+    content: str
+    published: bool = True
+    owner: UserResponse
+
+
+class CreatePost(PostBase):
+    pass
+
+
+class Post(PostBase):
+    id: int
+    created_at: datetime
+    owner_id: int
+
+    class Config:
+        from_attributes = True
+
+
+class CreateUser(BaseModel):
+    email: EmailStr
+    password: str
 
 
 class AccessToken(BaseModel):

@@ -2,6 +2,7 @@
 
 from sqlalchemy import TIMESTAMP, Boolean, Column, ForeignKey, Integer, String, text
 from .database import Base
+from sqlalchemy.orm import relationship
 
 
 # Responsible for defining the columns of our "posts" table within postgres
@@ -17,6 +18,8 @@ class Post(Base):
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
     )
     owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+
+    owner = relationship("User") # name of the model
 
 
 class User(Base):
