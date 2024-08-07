@@ -1,9 +1,13 @@
 from fastapi import FastAPI
 
+from .config import Settings
 from app.routers import auth
 from . import models
 from .database import engine
 from .routers import post, users
+
+
+app_settings = Settings()
 
 models.Base.metadata.create_all(bind=engine)
 
