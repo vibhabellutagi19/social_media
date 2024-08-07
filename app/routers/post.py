@@ -1,7 +1,10 @@
+from pyexpat import model
+from turtle import pos
 from typing import List, Optional
 from fastapi import Depends, HTTPException, Response, status, APIRouter
+from sqlalchemy import func
 
-import oauth2
+import app.oauth2 as oauth2
 
 
 from .. import models, schema
@@ -11,7 +14,7 @@ from sqlalchemy.orm import Session
 router = APIRouter(prefix="/posts", tags=["Posts"])
 
 
-@router.get("/", response_model=List[schema.Post])
+@router.get("/", response_model=List[schema.PostResponse])
 def get_posts(
     db: Session = Depends(get_db),
     current_user=Depends(oauth2.get_current_user),
@@ -20,12 +23,15 @@ def get_posts(
     search: Optional[str] = "",
 ):
     posts = (
-        db.query(models.Post)
+        db.query(models.Post, func.count(models.Vote.post_id).label("votes"))
+        .join(models.Vote, models.Vote.post_id == models.Post.id, isouter=True)
+        .group_by(models.Post.id)
         .filter(models.Post.title.contains(search))
         .limit(limit)
         .offset(skip)
         .all()
     )
+
     return posts
 
 
@@ -46,13 +52,19 @@ def create_posts(
 
 
 # {id} is path parameter
-@router.get("/{id}", response_model=schema.Post)
+@router.get("/{id}", response_model=schema.PostResponse)
 def get_post(
     id: int,
     db: Session = Depends(get_db),
     current_user=Depends(oauth2.get_current_user),
 ):  # to vaidate the id always be int, provide it as int
-    found_post = db.query(models.Post).filter(models.Post.id == id).first()
+    found_post = (
+        db.query(models.Post, func.count(models.Vote.post_id).label("votes"))
+        .join(models.Vote, models.Vote.post_id == models.Post.id, isouter=True)
+        .group_by(models.Post.id)
+        .filter(models.Post.id == id)
+        .first()
+    )
 
     if not found_post:
         raise HTTPException(
