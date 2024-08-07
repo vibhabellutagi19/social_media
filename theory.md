@@ -52,3 +52,9 @@ INSERT INTO posts (title, content, published) VALUES
 
 select * from posts p ;
 ```
+
+## alembic
+
+`alembic init <directory>`
+
+❯ alembic revision --m "create post table"
