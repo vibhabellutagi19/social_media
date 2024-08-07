@@ -17,9 +17,11 @@ class Post(Base):
     created_at = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
     )
-    owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    owner_id = Column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
 
-    owner = relationship("User") # name of the model
+    owner = relationship("User")  # name of the model
 
 
 class User(Base):
@@ -30,4 +32,21 @@ class User(Base):
     password = Column(String, nullable=False)
     created_at = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
+    )
+
+
+class Vote(Base):
+    __tablename__ = "vote"
+
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        primary_key=True,
+        nullable=False,
+    )
+    post_id = Column(
+        Integer,
+        ForeignKey("posts_v2.id", ondelete="CASCADE"),
+        primary_key=True,
+        nullable=False,
     )
