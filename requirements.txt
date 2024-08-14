@@ -50,7 +50,7 @@ SQLAlchemy==1.4.23
 starlette>=0.37.2,<0.38.0
 toml==0.10.2
 typing-extensions>=4.0,<5.0
-ujson==4.0.2
+ujson>=4.0.1
 urllib3==1.26.6
 uvicorn==0.13.4
 watchgod==0.7
