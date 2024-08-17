@@ -53,8 +53,8 @@ INSERT INTO posts (title, content, published) VALUES
 select * from posts p ;
 ```
 
-### gunicorn
-`gunicorn main:app --workers 4 --worker-class`
+## gunicorn
+`gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000`
 
 ## alembic
 
