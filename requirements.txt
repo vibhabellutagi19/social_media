@@ -28,6 +28,7 @@ fastapi-cli==0.0.4
 funcsigs==1.0.2
 future==0.17.1
 greenlet==3.0.3
+gunicorn==23.0.0
 h11==0.14.0
 holidays==0.9.11
 httpcore==1.0.5
