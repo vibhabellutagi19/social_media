@@ -61,3 +61,6 @@ select * from posts p ;
 `alembic init <directory>`
 
 ❯ alembic revision --m "create post table"
+
+## creating own services for our app
+[here](https://youtu.be/0sOvCWFmrtA?t=46508)
