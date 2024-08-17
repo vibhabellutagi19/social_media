@@ -53,6 +53,9 @@ INSERT INTO posts (title, content, published) VALUES
 select * from posts p ;
 ```
 
+### gunicorn
+`gunicorn main:app --workers 4 --worker-class`
+
 ## alembic
 
 `alembic init <directory>`
